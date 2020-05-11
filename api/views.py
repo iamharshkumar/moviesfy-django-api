@@ -32,3 +32,16 @@ class MovieListView(ListAPIView):
 class MovieDetail(RetrieveAPIView):
     queryset = Movies.objects.all()
     serializer_class = MovieSerializer
+
+
+class GenreFetch(APIView):
+    serializer_class = MovieSerializer
+
+    def get(self, request):
+        queryset = Movies.objects.all()
+        q = request.GET.get('q')
+
+        if q:
+            queryset = queryset.filter(genre=q)
+        serializer = self.serializer_class(queryset, many=True).data
+        return Response(serializer, status=HTTP_200_OK)

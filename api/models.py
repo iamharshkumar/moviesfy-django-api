@@ -21,6 +21,7 @@ class Movies(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     trailer = models.CharField(max_length=500, null=True, blank=True)
     download_size = models.CharField(max_length=100, null=True, blank=True)
+    type = models.CharField(max_length=100, choices=(("M", "Movies"), ("S", "Season")), null=True, blank=True)
 
     def __str__(self):
         return self.title
