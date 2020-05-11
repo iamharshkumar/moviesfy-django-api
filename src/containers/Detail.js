@@ -10,6 +10,7 @@ class Detail extends React.Component {
 
     componentDidMount() {
         this.fetchMovieDetail()
+        console.log(this.props.match.params.id)
     }
 
     fetchMovieDetail = () => {

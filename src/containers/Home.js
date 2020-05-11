@@ -64,7 +64,7 @@ class HomepageLayout extends React.Component {
                                                 {movieList.map(movie => {
                                                     return (
                                                         <div className="w3l-movie-gride-agile">
-                                                            <Link to={`movie/${movie.id}`}
+                                                            <Link to={`/movie/${movie.id}`}
                                                                   className="hvr-sweep-to-bottom"><img
                                                                 src={movie.image}
                                                                 title="Movies Pro"
