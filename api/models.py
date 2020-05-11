@@ -13,7 +13,7 @@ class Movies(models.Model):
     title = models.CharField(max_length=250, null=False)
     story = models.CharField(max_length=2000, null=False)
     release_date = models.CharField(max_length=100, null=False)
-    genre = models.ManyToManyField(to=Genre, null=True)
+    genre = models.ManyToManyField(to=Genre, blank=True)
     rating = models.DecimalField(decimal_places=1, max_digits=5)
     image = models.CharField(max_length=2000, null=False)
     download = models.FileField()

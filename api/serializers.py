@@ -1,8 +1,30 @@
 from rest_framework import serializers
-from api.models import Movies
+from api.models import Movies, Genre
+
+
+class GenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = '__all__'
 
 
 class MovieSerializer(serializers.ModelSerializer):
+    genre = serializers.SerializerMethodField()
+
     class Meta:
         model = Movies
-        fields = '__all__'
+        fields = ('title',
+                  'story',
+                  'release_date',
+                  'genre',
+                  'rating',
+                  'image',
+                  'download',
+                  'category',
+                  'create_date',
+                  'trailer',
+                  'download_size')
+
+    def get_genre(self, obj):
+        q = Genre.objects.filter(movies=obj.id)
+        return GenreSerializer(q, many=True).data
