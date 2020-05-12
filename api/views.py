@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.views import APIView
-from api.models import Movies
-from .serializers import MovieSerializer
+from api.models import Movies, Genre
+from .serializers import MovieSerializer, GenreSerializer
 
 from rest_framework.status import HTTP_200_OK
 from rest_framework.response import Response
@@ -32,6 +32,11 @@ class MovieListView(ListAPIView):
 class MovieDetail(RetrieveAPIView):
     queryset = Movies.objects.all()
     serializer_class = MovieSerializer
+
+
+class GenreList(ListAPIView):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
 
 
 class GenreFetch(APIView):
