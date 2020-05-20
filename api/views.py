@@ -50,3 +50,20 @@ class GenreFetch(APIView):
             queryset = queryset.filter(genre=q)
         serializer = self.serializer_class(queryset, many=True).data
         return Response(serializer, status=HTTP_200_OK)
+
+
+class FetchCategoryType(APIView):
+    serializer_class = MovieSerializer
+
+    def get(self, request):
+        queryset = Movies.objects.all()
+        genre = request.GET.get('genre')
+        movie_type = request.GET.get('type')
+
+        if movie_type:
+            queryset = queryset.filter(type=movie_type)
+
+        if genre:
+            queryset = queryset.filter(type=movie_type, genre=genre)
+        serializer = self.serializer_class(queryset, many=True).data
+        return Response(serializer, status=HTTP_200_OK)
