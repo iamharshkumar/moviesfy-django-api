@@ -59,11 +59,19 @@ class FetchCategoryType(APIView):
         queryset = Movies.objects.all()
         genre = request.GET.get('genre')
         movie_type = request.GET.get('type')
+        queryset1 = []
+        queryset2 = []
 
         if movie_type:
             queryset = queryset.filter(type=movie_type)
+            queryset1 = queryset.order_by('-create_date')
+            queryset2 = queryset.order_by('-rating')
 
         if genre:
             queryset = queryset.filter(type=movie_type, genre=genre)
-        serializer = self.serializer_class(queryset, many=True).data
-        return Response(serializer, status=HTTP_200_OK)
+            queryset1 = queryset.order_by('-create_date')
+            queryset2 = queryset.order_by('-rating')
+
+        serializer = self.serializer_class(queryset1, many=True).data
+        serializer1 = self.serializer_class(queryset2, many=True).data
+        return Response({"recent": serializer, "top_rated": serializer1}, status=HTTP_200_OK)
