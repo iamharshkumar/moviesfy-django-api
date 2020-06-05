@@ -10,6 +10,7 @@ class GenreSerializer(serializers.ModelSerializer):
 
 class MovieSerializer(serializers.ModelSerializer):
     genre = serializers.SerializerMethodField()
+    type = serializers.SerializerMethodField()
 
     class Meta:
         model = Movies
@@ -30,3 +31,6 @@ class MovieSerializer(serializers.ModelSerializer):
     def get_genre(self, obj):
         q = Genre.objects.filter(movies=obj.id)
         return GenreSerializer(q, many=True).data
+
+    def get_type(self, obj):
+        return obj.get_type_display()
