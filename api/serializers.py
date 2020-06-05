@@ -24,7 +24,8 @@ class MovieSerializer(serializers.ModelSerializer):
                   'category',
                   'create_date',
                   'trailer',
-                  'download_size')
+                  'download_size',
+                  'type')
 
     def get_genre(self, obj):
         q = Genre.objects.filter(movies=obj.id)
