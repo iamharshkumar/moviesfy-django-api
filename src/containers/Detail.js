@@ -2,6 +2,7 @@ import React from 'react';
 import {Container} from "semantic-ui-react";
 import axios from 'axios';
 import {API_URL} from "../constants";
+import ReactPlayer from 'react-player'
 
 class Detail extends React.Component {
     state = {
