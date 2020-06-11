@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.views import APIView
-from api.models import Movies, Genre
+from .models import Movies, Genre
 from .serializers import MovieSerializer, GenreSerializer
 
 from rest_framework.status import HTTP_200_OK
@@ -54,24 +54,28 @@ class GenreFetch(APIView):
 
 class FetchCategoryType(APIView):
     serializer_class = MovieSerializer
+    serializer_class1 = GenreSerializer
 
     def get(self, request):
-        queryset = Movies.objects.all()
+        q = Movies.objects.all()
+        g = Genre.objects.all()
         genre = request.GET.get('genre')
         movie_type = request.GET.get('type')
         queryset1 = []
         queryset2 = []
 
         if movie_type:
-            queryset = queryset.filter(type=movie_type)
-            queryset1 = queryset.order_by('-create_date')
-            queryset2 = queryset.order_by('-rating')
+            q = q.filter(type=movie_type)
+            g = g.filter(movies__type=movie_type).order_by('id').distinct()
+            queryset1 = q.order_by('-create_date')
+            queryset2 = q.order_by('-rating')
 
         if genre:
-            queryset = queryset.filter(type=movie_type, genre=genre)
-            queryset1 = queryset.order_by('-create_date')
-            queryset2 = queryset.order_by('-rating')
+            q = q.filter(type=movie_type, genre=genre)
+            queryset1 = q.order_by('-create_date')
+            queryset2 = q.order_by('-rating')
 
         serializer = self.serializer_class(queryset1, many=True).data
         serializer1 = self.serializer_class(queryset2, many=True).data
-        return Response({"recent": serializer, "top_rated": serializer1}, status=HTTP_200_OK)
+        serializer2 = self.serializer_class1(g, many=True).data
+        return Response({"genres":serializer2,"recent": serializer, "top_rated": serializer1}, status=HTTP_200_OK)

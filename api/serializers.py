@@ -26,6 +26,7 @@ class MovieSerializer(serializers.ModelSerializer):
                   'create_date',
                   'trailer',
                   'download_size',
+                  'length'
                   'type')
 
     def get_genre(self, obj):
