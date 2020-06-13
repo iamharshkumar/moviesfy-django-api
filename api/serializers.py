@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Movies, Genre
+from .models import Movies, Genre, Episode
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -8,9 +8,16 @@ class GenreSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class EpisodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Episode
+        fields = '__all__'
+
+
 class MovieSerializer(serializers.ModelSerializer):
     genre = serializers.SerializerMethodField()
     type = serializers.SerializerMethodField()
+    episode = serializers.SerializerMethodField()
 
     class Meta:
         model = Movies
@@ -21,13 +28,11 @@ class MovieSerializer(serializers.ModelSerializer):
                   'genre',
                   'rating',
                   'image',
-                  'download',
                   'category',
                   'create_date',
                   'trailer',
-                  'download_size',
                   'type',
-                  'length'
+                  'episode'
                   )
 
     def get_genre(self, obj):
@@ -36,3 +41,7 @@ class MovieSerializer(serializers.ModelSerializer):
 
     def get_type(self, obj):
         return obj.get_type_display()
+
+    def get_episode(self, obj):
+        q = Episode.objects.filter(movies=obj.id)
+        return EpisodeSerializer(q, many=True).data

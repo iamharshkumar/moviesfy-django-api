@@ -1,6 +1,7 @@
 from django.contrib import admin
-from api.models import Movies, Genre
+from .models import Movies, Genre, Episode
 
 # Register your models here.
 admin.site.register(Movies)
 admin.site.register(Genre)
+admin.site.register(Episode)
