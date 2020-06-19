@@ -66,8 +66,6 @@ def recommendedMovies(movie):
     return movies
 
 
-
-
 class SearchView(APIView):
     serializer_class = MovieSerializer
 
@@ -138,10 +136,12 @@ class FetchCategoryType(APIView):
         movie_type = request.GET.get('type')
         queryset1 = []
         queryset2 = []
+        queryset3 = []
 
         if movie_type:
             q = q.filter(type=movie_type)
             g = g.filter(movies__type=movie_type).order_by('id').distinct()
+            queryset3 = q.filter(featured=True)
             queryset1 = q.order_by('-create_date')
             queryset2 = q.order_by('-rating')
 
@@ -151,6 +151,9 @@ class FetchCategoryType(APIView):
             queryset2 = q.order_by('-rating')
 
         serializer = self.serializer_class(queryset1, many=True).data
+        serializer3 = self.serializer_class(queryset3, many=True).data
         serializer1 = self.serializer_class(queryset2, many=True).data
         serializer2 = self.serializer_class1(g, many=True).data
-        return Response({"genres": serializer2, "recent": serializer, "top_rated": serializer1}, status=HTTP_200_OK)
+        return Response(
+            {"genres": serializer2, "featured": serializer3, "recent": serializer, "top_rated": serializer1},
+            status=HTTP_200_OK)
