@@ -141,7 +141,7 @@ class FetchCategoryType(APIView):
         if movie_type:
             q = q.filter(type=movie_type)
             g = g.filter(movies__type=movie_type).order_by('id').distinct()
-            queryset3 = q.filter(featured=True).order_by('-featured')
+            queryset3 = q.filter(featured=True).order_by('-update')
             queryset1 = q.order_by('-create_date')
             queryset2 = q.order_by('-rating')
 
