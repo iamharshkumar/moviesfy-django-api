@@ -61,7 +61,7 @@ def recommendedMovies(movie):
         # print(movie)
         movies.append(get_title_from_index(movie[0]))
         i = i + 1
-        if i > 7:
+        if i > 8:
             break
     return movies
 
@@ -141,7 +141,7 @@ class FetchCategoryType(APIView):
         if movie_type:
             q = q.filter(type=movie_type)
             g = g.filter(movies__type=movie_type).order_by('id').distinct()
-            queryset3 = q.filter(featured=True)
+            queryset3 = q.filter(featured=True).order_by('-featured')
             queryset1 = q.order_by('-create_date')
             queryset2 = q.order_by('-rating')
 
