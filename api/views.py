@@ -32,7 +32,7 @@ def recommendedMovies(movie):
     # Step 3: Create a column in DF which combines all selected features
 
     def combine_features(row):
-        return row['title'] + " " + str(row['genre']) + " " + row['type'] + " " + row['category']
+        return ' '.join([row['title'],str(row['genre']),row['type'],row['category']])
 
     df['combined_features'] = df.apply(combine_features, axis=1)
 
@@ -51,8 +51,7 @@ def recommendedMovies(movie):
     similar_movies = list(enumerate(cosine_sim[int(movie_index)]))
 
     # Step 7: Get a list of similar movies in descending order of similarity score
-    sorted_similar_movies = sorted(similar_movies, key=lambda x: x[1], reverse=True)
-    new_sorted_similar_movies = sorted_similar_movies[1:]
+    new_sorted_similar_movies = sorted(similar_movies, key=lambda x: x[1], reverse=True)[1:]
 
     # Step 8: Print titles of first 50 movies
     i = 0
@@ -92,7 +91,6 @@ class MovieDetail(APIView):
         q = request.GET.get('id')
 
         queryset = Movies.objects.all()
-        queryset1 = Movies.objects.all()
         movie_list = []
 
         if q:
@@ -134,26 +132,22 @@ class FetchCategoryType(APIView):
         g = Genre.objects.all()
         genre = request.GET.get('genre')
         movie_type = request.GET.get('type')
-        queryset1 = []
-        queryset2 = []
-        queryset3 = []
+        queryset = []
 
         if movie_type:
             q = q.filter(type=movie_type)
             g = g.filter(movies__type=movie_type).order_by('id').distinct()
-            queryset3 = q.filter(featured=True).order_by('-update')
-            queryset1 = q.order_by('-create_date')
-            queryset2 = q.order_by('-rating')
+            queryset=[q.order_by('-create_date'),q.order_by('-rating'),q.filter(featured=True).order_by('-update')]
 
         if genre:
             q = q.filter(type=movie_type, genre=genre)
-            queryset1 = q.order_by('-create_date')
-            queryset2 = q.order_by('-rating')
+            queryset=[q.order_by('-create_date'),q.order_by('-rating')]
 
-        serializer = self.serializer_class(queryset1, many=True).data
-        serializer3 = self.serializer_class(queryset3, many=True).data
-        serializer1 = self.serializer_class(queryset2, many=True).data
-        serializer2 = self.serializer_class1(g, many=True).data
+        serializer=[]
+        for i in queryset:
+            serializer.append(self.serializer_class(queryset[i], many=True).data)
+        serializer.append(self.serializer_class1(g, many=True).data)
+
         return Response(
-            {"genres": serializer2, "featured": serializer3, "recent": serializer, "top_rated": serializer1},
+            {"genres": serializer[3], "featured": serializer[2], "recent": serializer[0], "top_rated": serializer[1]},
             status=HTTP_200_OK)
